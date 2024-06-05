@@ -27,6 +27,15 @@ func main() {
 
 	// Middleware Authentication
 	app := fiber.New()
+	app.Use(func(c *fiber.Ctx) error {
+		if c.Method() == "OPTIONS" {
+			c.Set("Access-Control-Allow-Origin", "*")
+			c.Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			c.Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+			return c.SendStatus(fiber.StatusNoContent)
+		}
+		return c.Next()
+	})
 	authentication := jwtware.New(jwtware.Config{
 		SigningMethod: "HS256",
 		SigningKey:    []byte(jwtSecret),
@@ -182,6 +191,7 @@ func DeleteBook(c *fiber.Ctx) error {
 	if err != nil {
 		return fiber.ErrBadRequest
 	}
+	// This code is soft delete
 	tx := db.Delete(&Book{}, id)
 	if tx.Error != nil {
 		return fiber.NewError(fiber.StatusNotFound, "Book not found")
