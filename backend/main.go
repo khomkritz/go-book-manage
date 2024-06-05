@@ -41,12 +41,12 @@ func main() {
 	app.Post("/signup", Signup)
 	app.Post("/login", Login)
 
-	securedRoutes := app.Group("/", authentication)
-	securedRoutes.Get("/getbooks", GetBooks)
-	securedRoutes.Get("/getbook/:id", GetBook)
-	securedRoutes.Post("/createbook", CreateBook)
-	securedRoutes.Put("/updatebook/:id", Updatebook)
-	securedRoutes.Delete("/deletebook/:id", DeleteBook)
+	securedRoutes := app.Group("/api", authentication)
+	securedRoutes.Get("/books", GetBooks)
+	securedRoutes.Get("/books/:id", GetBook)
+	securedRoutes.Post("/books", CreateBook)
+	securedRoutes.Put("/books/:id", Updatebook)
+	securedRoutes.Delete("/books/:id", DeleteBook)
 
 	app.Listen(":8000")
 }
